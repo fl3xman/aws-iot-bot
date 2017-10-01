@@ -56,8 +56,8 @@ export default (container: Container) => {
       @response() res: express.Response,
     ): void {
 
-      res.sendStatus(HttpStatus.OK);
       this.service.processMessages(req.body);
+      res.sendStatus(HttpStatus.OK);
     }
 
   }
