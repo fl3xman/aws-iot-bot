@@ -619,7 +619,7 @@ exports.Assembly = Assembly;
 let FacebookService = class FacebookService {
     processMessages(data) {
         // tslint:disable-next-line:no-console
-        console.log(`Recevied data`);
+        console.log(`Recevied data ${JSON.stringify(data)}`);
         logger.debug(`Recevied data`);
         if (data.object === "page" &&
             !_.isUndefined(data.entry) &&
