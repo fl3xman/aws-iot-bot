@@ -17,7 +17,7 @@ export default class FacebookService {
   public processMessages(data: any): void {
 
     // tslint:disable-next-line:no-console
-    console.log(`Recevied data`);
+    console.log(`Recevied data ${JSON.stringify(data)}`);
     logger.debug(`Recevied data`);
     if (data.object === "page" &&
         !_.isUndefined(data.entry) &&
