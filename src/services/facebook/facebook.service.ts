@@ -88,7 +88,7 @@ export default class FacebookService {
   }
 
   private updateThing(on: boolean): string {
-    return this.shadow.update(config.aws.thing, { state: { desired: { led: on }}}  );
+    return this.shadow.update(config.aws.thing, { state: { desired: { led: on ? "True" : "False" }}}  );
   }
 
   private connectThing() {

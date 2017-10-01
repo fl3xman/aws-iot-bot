@@ -729,7 +729,7 @@ let FacebookService = class FacebookService {
         return re.test(text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"));
     }
     updateThing(on) {
-        return this.shadow.update(config.aws.thing, { state: { desired: { led: on } } });
+        return this.shadow.update(config.aws.thing, { state: { desired: { led: on ? "True" : "False" } } });
     }
     connectThing() {
         const self = this;
