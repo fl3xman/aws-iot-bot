@@ -102,19 +102,16 @@ export default class FacebookService {
     });
 
     this.shadow.on("status", (thingName, stat, clientToken, stateObject) => {
-
       // tslint:disable-next-line:no-console
       console.log(`Thing received status ${stat} on ${thingName}: ${JSON.stringify(stateObject)}`);
     });
 
     this.shadow.on("delta", (thingName, stateObject) => {
-
       // tslint:disable-next-line:no-console
       console.log(`Thing received delta on ${thingName}: ${JSON.stringify(stateObject)}`);
     });
 
     this.shadow.on("timeout", (thingName, clientToken) => {
-
       // tslint:disable-next-line:no-console
       console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
     });
