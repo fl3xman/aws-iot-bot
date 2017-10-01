@@ -20,6 +20,7 @@ export default class FacebookService {
   constructor(
     @inject(ServiceAssembly.AWS.thingShadow.type) private shadow: AWS.thingShadow,
   ) {
+    this.connectThing();
   }
 
   public replyMessage(data: any): void {
@@ -32,14 +33,14 @@ export default class FacebookService {
             const sender = payload.sender.id;
             const text = _.toLower(payload.message.text);
             switch (true) {
-              case this.checkText(text, ["on", "led on", "turn on"]):
+              case (this.checkText(text, ["on", "led on", "turn on"]) && !_.isNull(this.updateThing(true))):
               {
-                this.executeThing(sender, "True", "Led was turned on.");
+                this.reply(sender, "Led was turned on.");
               }
               break;
-              case this.checkText(text, ["off", "led off", "turn off"]):
+              case (this.checkText(text, ["off", "led off", "turn off"]) && !_.isNull(this.updateThing(false))):
               {
-                this.executeThing(sender, "False", "Led was turned off.");
+                this.reply(sender, "Led was turned off.");
               }
               break;
               default:
@@ -86,46 +87,36 @@ export default class FacebookService {
     );
   }
 
-  private executeThing(id: string, on: string, text: string): void {
+  private updateThing(on: boolean): string {
+    return this.shadow.update(config.aws.thing, { state: { desired: { led: on ? "True" : "False" }}}  );
+  }
+
+  private connectThing() {
+
     const self = this;
-    this.updateThing(on).then((success) => {
-      self.reply(id, success ? text : "Could not do it :(.");
+    this.shadow.on("connect", () => {
+      self.shadow.register(config.aws.thing, {}, () => {
+        // tslint:disable-next-line:no-console
+        console.log(`Thing connected/registered successfully`);
+      });
     });
-  }
 
-  private updateThingState(on: string): string {
-    return this.shadow.update(config.aws.thing, { state: { desired: { led: on }}}  );
-  }
+    this.shadow.on("status", (thingName, stat, clientToken, stateObject) => {
 
-  private updateThing(on: string): Promise<boolean> {
-    const self = this;
-    return new Promise<boolean>((resolve, reject) => {
-      this.shadow.on("connect", () => {
-        self.shadow.register(config.aws.thing, {}, () => {
-          // tslint:disable-next-line:no-console
-          console.log(`Thing connected/registered successfully`);
-          if (!_.isNull(this.updateThingState(on))) {
-            // tslint:disable-next-line:no-console
-            console.log(`Thing udpated successfully`);
-          } else {
-            // tslint:disable-next-line:no-console
-            console.log(`Thing failed to update successfully`);
-          }
-        });
-      });
-      this.shadow.on("status", (thingName, stat, clientToken, stateObject) => {
-        // tslint:disable-next-line:no-console
-        console.log(`Thing received status ${stat} on ${thingName}: ${JSON.stringify(stateObject)}`);
-        resolve(stat === "accepted" && (on === stateObject.state.desired.led));
-      });
-      this.shadow.on("delta", (thingName, stateObject) => {
-        // tslint:disable-next-line:no-console
-        console.log(`Thing received delta on ${thingName}: ${JSON.stringify(stateObject)}`);
-      });
-      this.shadow.on("timeout", (thingName, clientToken) => {
-        // tslint:disable-next-line:no-console
-        console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
-      });
+      // tslint:disable-next-line:no-console
+      console.log(`Thing received status ${stat} on ${thingName}: ${JSON.stringify(stateObject)}`);
+    });
+
+    this.shadow.on("delta", (thingName, stateObject) => {
+
+      // tslint:disable-next-line:no-console
+      console.log(`Thing received delta on ${thingName}: ${JSON.stringify(stateObject)}`);
+    });
+
+    this.shadow.on("timeout", (thingName, clientToken) => {
+
+      // tslint:disable-next-line:no-console
+      console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
     });
   }
 }
