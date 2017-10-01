@@ -52,12 +52,12 @@ export default (container: Container) => {
 
     @httpPost("/")
     public receiveMessages(
-      @requestBody() body: any,
+      @request() req: express.Request,
       @response() res: express.Response,
     ): void {
 
       res.sendStatus(HttpStatus.OK);
-      this.service.processMessages(body);
+      this.service.processMessages(req.body);
     }
 
   }
