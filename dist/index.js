@@ -351,8 +351,8 @@ const morgan = __webpack_require__(23);
 const config = __webpack_require__(4);
 const Errors = __webpack_require__(7);
 const assembly_1 = __webpack_require__(27);
-const assembly_2 = __webpack_require__(37);
-const assembly_3 = __webpack_require__(38);
+const assembly_2 = __webpack_require__(36);
+const assembly_3 = __webpack_require__(37);
 const container = new inversify_1.Container();
 if (!config.server.isProduction) {
     const logger = inversify_logger_middleware_1.makeLoggerMiddleware();
@@ -476,7 +476,7 @@ exports.default = ErrorFactory;
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_express_utils_1 = __webpack_require__(2);
 const FacebookController = __webpack_require__(28);
-const RootController = __webpack_require__(35);
+const RootController = __webpack_require__(34);
 const registerControllers = (container) => {
     const root = RootController.default(container);
     const facebook = FacebookController.default(container);
@@ -609,7 +609,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = __webpack_require__(34);
+// import * as _ from "lodash";
 const logger = __webpack_require__(0);
 const inversify_1 = __webpack_require__(1);
 const Assembly = {
@@ -618,21 +618,18 @@ const Assembly = {
 exports.Assembly = Assembly;
 let FacebookService = class FacebookService {
     processMessages(data) {
+        // {"object":"page","entry":[{"id":"793616674072284","time":1506864087839,"messaging":[{"sender":{"id":"1409712342478458"},"recipient":{"id":"793616674072284"},"timestamp":1506864087090,"message":{"mid":"mid.$cAALRymDkH9JlCV6IMle2BlADg24N","seq":54463,"text":"hi"}}]}]}
         // tslint:disable-next-line:no-console
         console.log(`Recevied data ${JSON.stringify(data)}`);
         logger.debug(`Recevied data`);
-        if (data.object === "page" &&
-            !_.isUndefined(data.entry) &&
-            !_.isArray(data.entry)) {
+        if (data.object === "page") {
             data.entry.forEach((entry) => {
                 const messaging = entry.messaging;
                 messaging.forEach((payload) => {
                     // handle inbound messages
-                    if (payload.message && !payload.message.is_echo) {
-                        // tslint:disable-next-line:no-console
-                        console.log(`Message ${JSON.stringify(payload)}`);
-                        logger.debug(`Message ${JSON.stringify(payload)}`);
-                    }
+                    // tslint:disable-next-line:no-console
+                    console.log(`Message ${JSON.stringify(payload)}`);
+                    logger.debug(`Message ${JSON.stringify(payload)}`);
                 });
             });
         }
@@ -646,24 +643,18 @@ exports.default = FacebookService;
 
 /***/ }),
 /* 34 */
-/***/ (function(module, exports) {
-
-module.exports = require("lodash");
-
-/***/ }),
-/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const root_controller_1 = __webpack_require__(36);
+const root_controller_1 = __webpack_require__(35);
 exports.Assembly = root_controller_1.Assembly;
 exports.default = root_controller_1.default;
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -708,7 +699,7 @@ exports.default = (container) => {
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -740,7 +731,7 @@ exports.default = Assembly;
 
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
