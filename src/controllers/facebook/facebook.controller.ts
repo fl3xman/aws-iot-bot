@@ -10,7 +10,7 @@ import {
 } from "inversify-express-utils";
 
 import * as config from "@config";
-import FacebookService, { Assembly as FacebookAssembly } from "@services/facebook";
+import IotService, { Assembly as IotAssembly } from "@services/iot";
 
 const Assembly = {
   name: "FacebookController", type: Symbol("FacebookController"),
@@ -31,7 +31,7 @@ export default (container: Container) => {
     }
 
     constructor(
-      @inject(FacebookAssembly.type) private service: FacebookService,
+      @inject(IotAssembly.type) private service: IotService,
     ) {}
 
     @httpGet("/")
@@ -56,7 +56,7 @@ export default (container: Container) => {
       @response() res: express.Response,
     ): void {
 
-      this.service.processMessages(req.body);
+      this.service.processMessage(req.body);
       res.sendStatus(HttpStatus.OK);
     }
 

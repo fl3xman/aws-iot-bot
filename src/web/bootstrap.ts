@@ -1,7 +1,5 @@
 import "reflect-metadata";
 
-import * as AWS from "aws-sdk";
-
 import { Container } from "inversify";
 import {
   InversifyExpressServer,
@@ -32,13 +30,6 @@ if (!config.server.isProduction) {
   container.applyMiddleware(logger);
 }
 
-const registerVersions = (versions: any) => {
-  AWS.config.apiVersions = {
-    iot: versions.iot,
-    iotdata: versions.iotdata,
-  };
-};
-
 const registerInjections = (con: Container) => {
 
   registerMiddlewares(con);
@@ -46,7 +37,6 @@ const registerInjections = (con: Container) => {
   registerControllers(con);
 };
 
-registerVersions(config.aws.versions);
 registerInjections(container);
 
 const server = new InversifyExpressServer(container);

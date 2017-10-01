@@ -7,7 +7,7 @@ import * as FacebookController from "@controllers/facebook";
 import * as RootController from "@controllers/roots";
 
 const registerControllers = (container: Container) => {
-  
+
   const root = RootController.default(container);
   const facebook = FacebookController.default(container);
 

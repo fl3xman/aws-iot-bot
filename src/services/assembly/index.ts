@@ -1,28 +1,29 @@
-import * as AWS from "aws-sdk";
+import * as AWS from "aws-iot-device-sdk";
 
 import { Container } from "inversify";
 
-import FacebookService, { Assembly as FacebookAssembly } from "@services/facebook";
+import * as config from "@config";
+import IotService, { Assembly as IotAssembly } from "@services/iot";
 
 const Assembly = {
   AWS: {
-    Iot: {
-      name: "Iot", type: Symbol("Iot"),
-    },
-    IotData: {
-      name: "IotData", type: Symbol("IotData"),
+    thingShadow: {
+      name: "thingShadow", type: Symbol("thingShadow"),
     },
   },
 };
 
 const registerServices = (container: Container) => {
-  container.bind<AWS.Iot>(Assembly.AWS.Iot.type).toDynamicValue((context) => {
-    return new AWS.Iot();
+  container.bind<AWS.thingShadow>(Assembly.AWS.thingShadow.type).toDynamicValue((context) => {
+    return new AWS.thingShadow({
+      caPath: config.aws.credentials.ca,
+      certPath: config.aws.credentials.crt,
+      clientId: config.aws.client,
+      host: config.aws.host,
+      keyPath: config.aws.credentials.private,
+    });
   }).inSingletonScope();
-  container.bind<AWS.IotData>(Assembly.AWS.IotData.type).toDynamicValue((context) => {
-    return new AWS.IotData();
-  }).inSingletonScope();
-  container.bind<FacebookService>(FacebookAssembly.type).to(FacebookService).inSingletonScope();
+  container.bind<IotService>(IotAssembly.type).to(IotService).inSingletonScope();
 };
 
 export {

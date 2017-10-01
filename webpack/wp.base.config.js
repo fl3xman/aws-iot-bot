@@ -16,7 +16,7 @@ module.exports = {
   ],
   module: {
     loaders: [
-      { test: /\.tsx?$/, loader: 'ts-loader', include: [path.join(__dirname, '../libs'),path.join(__dirname, '../src')] },
+      { test: /\.tsx?$/, loader: 'ts-loader', include: [path.join(__dirname, '../cert'),path.join(__dirname, '../src')] },
     ]
   },
   resolve: {
