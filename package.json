@@ -37,6 +37,7 @@
     "@types/lodash": "^4.14.74",
     "@types/morgan": "^1.7.32",
     "@types/node": "^8.0.28",
+    "@types/request-promise": "^4.1.38",
     "@types/uuid": "^3.4.2",
     "@types/winston": "^2.3.5",
     "cross-env": "^5.0.5",
@@ -66,6 +67,8 @@
     "morgan": "^1.9.0",
     "querystring": "^0.2.0",
     "reflect-metadata": "^0.1.10",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "uuid": "^3.1.0",
     "winston": "^2.3.1"
   }

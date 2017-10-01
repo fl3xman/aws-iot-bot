@@ -106,13 +106,13 @@ module.exports = require("inversify-express-utils");
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = require("http-status-codes");
+module.exports = require("winston");
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = require("winston");
+module.exports = require("http-status-codes");
 
 /***/ }),
 /* 6 */
@@ -150,7 +150,7 @@ exports.default = BaseError;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const HttpStatus = __webpack_require__(4);
+const HttpStatus = __webpack_require__(5);
 const base_error_1 = __webpack_require__(7);
 class HttpError extends base_error_1.default {
     constructor(status, message) {
@@ -174,9 +174,9 @@ exports.default = HttpError;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const iot_service_1 = __webpack_require__(35);
-exports.Assembly = iot_service_1.Assembly;
-exports.default = iot_service_1.default;
+const facebook_service_1 = __webpack_require__(35);
+exports.Assembly = facebook_service_1.Assembly;
+exports.default = facebook_service_1.default;
 
 
 /***/ }),
@@ -194,7 +194,7 @@ module.exports = require("aws-iot-device-sdk");
 Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = __webpack_require__(10);
 const config = __webpack_require__(0);
-const iot_1 = __webpack_require__(9);
+const facebook_1 = __webpack_require__(9);
 const Assembly = {
     AWS: {
         thingShadow: {
@@ -212,7 +212,7 @@ const registerServices = (container) => {
             keyPath: config.aws.credentials.private,
         });
     }).inSingletonScope();
-    container.bind(iot_1.Assembly.type).to(iot_1.default).inSingletonScope();
+    container.bind(facebook_1.Assembly.type).to(facebook_1.default).inSingletonScope();
 };
 exports.registerServices = registerServices;
 exports.default = Assembly;
@@ -228,7 +228,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config = __webpack_require__(0);
 const Bluebird = __webpack_require__(19);
 const http_1 = __webpack_require__(20);
-const logger = __webpack_require__(5);
+const logger = __webpack_require__(4);
 const bootstrap_1 = __webpack_require__(21);
 const server = http_1.createServer(bootstrap_1.default);
 const port = config.server.port;
@@ -329,7 +329,7 @@ exports.default = {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi = __webpack_require__(1);
-const logger = __webpack_require__(5);
+const logger = __webpack_require__(4);
 const schema = joi.object({
     LOGGER_ENABLED: joi.boolean()
         .truthy("TRUE")
@@ -409,7 +409,7 @@ const config = __webpack_require__(0);
 const Errors = __webpack_require__(6);
 const assembly_1 = __webpack_require__(29);
 const assembly_2 = __webpack_require__(11);
-const assembly_3 = __webpack_require__(39);
+const assembly_3 = __webpack_require__(40);
 const container = new inversify_1.Container();
 if (!config.server.isProduction) {
     const logger = inversify_logger_middleware_1.makeLoggerMiddleware();
@@ -465,8 +465,8 @@ module.exports = require("morgan");
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const errors_1 = __webpack_require__(27);
-const HttpStatus = __webpack_require__(4);
-const logger = __webpack_require__(5);
+const HttpStatus = __webpack_require__(5);
+const logger = __webpack_require__(4);
 const Assembly = {
     name: "ErrorGenericMiddleware",
 };
@@ -502,16 +502,10 @@ exports.HttpError = http_error_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const HttpStatus = __webpack_require__(4);
 const http_error_1 = __webpack_require__(8);
 class ErrorFactory {
     static createHttp(status, message) {
         return new http_error_1.default(status, message);
-    }
-    static createHttpFromAWS(error) {
-        const status = error.statusCode || HttpStatus.CONFLICT;
-        const message = `AWS Error(${error.code}): ${error.name} - ${error.message}`;
-        return this.createHttp(status, message);
     }
 }
 exports.default = ErrorFactory;
@@ -526,7 +520,7 @@ exports.default = ErrorFactory;
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_express_utils_1 = __webpack_require__(3);
 const FacebookController = __webpack_require__(30);
-const RootController = __webpack_require__(37);
+const RootController = __webpack_require__(38);
 const registerControllers = (container) => {
     const root = RootController.default(container);
     const facebook = FacebookController.default(container);
@@ -570,11 +564,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = __webpack_require__(32);
 const qs = __webpack_require__(33);
 const url = __webpack_require__(34);
-const HttpStatus = __webpack_require__(4);
+const HttpStatus = __webpack_require__(5);
 const inversify_1 = __webpack_require__(2);
 const inversify_express_utils_1 = __webpack_require__(3);
 const config = __webpack_require__(0);
-const iot_1 = __webpack_require__(9);
+const facebook_1 = __webpack_require__(9);
 const Assembly = {
     name: "FacebookController", type: Symbol("FacebookController"),
 };
@@ -598,7 +592,7 @@ exports.default = (container) => {
             }
         }
         receiveMessages(req, res) {
-            this.service.processMessage(req.body);
+            this.service.replyMessage(req.body);
             res.sendStatus(HttpStatus.OK);
         }
     };
@@ -621,8 +615,8 @@ exports.default = (container) => {
     FacebookController = __decorate([
         inversify_1.injectable(),
         inversify_express_utils_1.controller("/facebook/webhooks"),
-        __param(0, inversify_1.inject(iot_1.Assembly.type)),
-        __metadata("design:paramtypes", [iot_1.default])
+        __param(0, inversify_1.inject(facebook_1.Assembly.type)),
+        __metadata("design:paramtypes", [facebook_1.default])
     ], FacebookController);
     return FacebookController;
 };
@@ -668,53 +662,67 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AWS = __webpack_require__(10);
 const inversify_1 = __webpack_require__(2);
 const _ = __webpack_require__(36);
+const rp = __webpack_require__(37);
 const config = __webpack_require__(0);
 const assembly_1 = __webpack_require__(11);
 const Assembly = {
-    name: "IotService", type: Symbol("IotService"),
+    name: "FacebookService", type: Symbol("FacebookService"),
 };
 exports.Assembly = Assembly;
-let IotService = class IotService {
+let FacebookService = class FacebookService {
     constructor(shadow) {
         this.shadow = shadow;
         this.connectThing();
     }
-    processMessage(data) {
+    replyMessage(data) {
         if (data.object === "page") {
             data.entry.forEach((entry) => {
                 const messaging = entry.messaging;
                 messaging.forEach((payload) => {
-                    let success = false;
-                    // const sender = payload.sender.id;
+                    const sender = payload.sender.id;
                     const text = _.toLower(payload.message.text);
                     switch (true) {
-                        case this.checkText(text, ["led on", "turn on"]):
+                        case (this.checkText(text, ["on", "led on", "turn on"]) && !_.isNull(this.updateThing(true))):
                             {
-                                // tslint:disable-next-line:no-console
-                                console.log(`Will update thing to state on.`);
-                                success = _.isNull(this.updateThing(true));
+                                this.reply(sender, "Led was turned on.");
                             }
                             break;
-                        case this.checkText(text, ["led off", "turn off"]):
+                        case (this.checkText(text, ["off", "led off", "turn off"]) && !_.isNull(this.updateThing(false))):
                             {
-                                // tslint:disable-next-line:no-console
-                                console.log(`Will update thing to state off.`);
-                                success = _.isNull(this.updateThing(false));
+                                this.reply(sender, "Led was turned off.");
                             }
                             break;
-                        default: break;
-                    }
-                    if (success) {
-                        // tslint:disable-next-line:no-console
-                        console.log(`Update thing success.`);
-                    }
-                    else {
-                        // tslint:disable-next-line:no-console
-                        console.log(`Update thing failed.`);
+                        default:
+                            {
+                                this.reply(sender, "I am sorry :(, I was unable to complete your request.");
+                                // tslint:disable-next-line:no-console
+                                console.log(`Update thing failed.`);
+                            }
+                            break;
                     }
                 });
             });
         }
+    }
+    reply(id, text) {
+        const { tokens, debug, api } = config.facebook;
+        const qs = {
+            access_token: tokens.access,
+            debug,
+        };
+        const payload = {
+            message: { text },
+            recipient: { id },
+        };
+        return rp({
+            json: payload,
+            method: "POST",
+            qs,
+            uri: `https://graph.facebook.com/${api}/me/messages`,
+        }).catch((error) => {
+            // tslint:disable-next-line:no-console
+            console.log(`There was some error with FB: ${error}`);
+        });
     }
     checkText(text, values) {
         const re = new RegExp(values.join("|"));
@@ -745,12 +753,12 @@ let IotService = class IotService {
         });
     }
 };
-IotService = __decorate([
+FacebookService = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(assembly_1.default.AWS.thingShadow.type)),
     __metadata("design:paramtypes", [AWS.thingShadow])
-], IotService);
-exports.default = IotService;
+], FacebookService);
+exports.default = FacebookService;
 
 
 /***/ }),
@@ -761,18 +769,24 @@ module.exports = require("lodash");
 
 /***/ }),
 /* 37 */
+/***/ (function(module, exports) {
+
+module.exports = require("request-promise");
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const root_controller_1 = __webpack_require__(38);
+const root_controller_1 = __webpack_require__(39);
 exports.Assembly = root_controller_1.Assembly;
 exports.default = root_controller_1.default;
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -817,7 +831,7 @@ exports.default = (container) => {
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

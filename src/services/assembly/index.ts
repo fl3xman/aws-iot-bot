@@ -3,7 +3,7 @@ import * as AWS from "aws-iot-device-sdk";
 import { Container } from "inversify";
 
 import * as config from "@config";
-import IotService, { Assembly as IotAssembly } from "@services/iot";
+import FacebookService, { Assembly as FacebookAssembly } from "@services/facebook";
 
 const Assembly = {
   AWS: {
@@ -23,7 +23,7 @@ const registerServices = (container: Container) => {
       keyPath: config.aws.credentials.private,
     });
   }).inSingletonScope();
-  container.bind<IotService>(IotAssembly.type).to(IotService).inSingletonScope();
+  container.bind<FacebookService>(FacebookAssembly.type).to(FacebookService).inSingletonScope();
 };
 
 export {
