@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": ["es6"],
+    "types": ["reflect-metadata"],
+    "noImplicitAny": true,
+    "sourceMap": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["libs/common/*"],
+      "@config": ["src/config"],
+      "@utils/*": ["src/utils/*"],
+      "@assemblies/*": ["src/assemblies/*"],
+      "@models/*": ["src/models/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@services/*": ["src/services/*"],
+      "@middlewares/*": ["src/middlewares/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "webpack",
+    "tslint.json"
+  ]
+}
