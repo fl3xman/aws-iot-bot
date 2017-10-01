@@ -756,7 +756,7 @@ let FacebookService = class FacebookService {
             this.shadow.on("status", (thingName, stat, clientToken, stateObject) => {
                 // tslint:disable-next-line:no-console
                 console.log(`Thing received status ${stat} on ${thingName}: ${JSON.stringify(stateObject)}`);
-                resolve(stat === "accepted" && (on === stateObject.state.led));
+                resolve(stat === "accepted" && (on === stateObject.state.desired.led));
             });
             this.shadow.on("delta", (thingName, stateObject) => {
                 // tslint:disable-next-line:no-console
