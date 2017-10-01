@@ -526,9 +526,9 @@ exports.default = (container) => {
                 res.send("Facebook was not verified.");
             }
         }
-        receiveMessages(body, res) {
+        receiveMessages(req, res) {
             res.sendStatus(HttpStatus.OK);
-            this.service.processMessages(body);
+            this.service.processMessages(req.body);
         }
     };
     __decorate([
@@ -541,7 +541,7 @@ exports.default = (container) => {
     ], FacebookController.prototype, "verify", null);
     __decorate([
         inversify_express_utils_1.httpPost("/"),
-        __param(0, inversify_express_utils_1.requestBody()),
+        __param(0, inversify_express_utils_1.request()),
         __param(1, inversify_express_utils_1.response()),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object]),

@@ -6,7 +6,7 @@ import * as HttpStatus from "http-status-codes";
 
 import { Container, inject, injectable } from "inversify";
 import {
-  controller, httpGet, httpPost, interfaces, request, requestBody, response,
+  controller, httpGet, httpPost, interfaces, request, response,
 } from "inversify-express-utils";
 
 import * as config from "@config";
