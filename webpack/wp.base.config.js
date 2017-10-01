@@ -8,7 +8,7 @@ module.exports = {
   target: 'node',
   output: {
     filename: 'index.js',
-    path: path.join(__dirname, '../build'),
+    path: path.join(__dirname, '../dist'),
     libraryTarget: "commonjs"
   },
   externals: [

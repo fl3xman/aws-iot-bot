@@ -112,7 +112,6 @@ $RECYCLE.BIN/
 lib/
 libs/
 data/
-dist
 build
 
 # node-lambda

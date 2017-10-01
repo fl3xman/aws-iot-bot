@@ -1,4 +1,4 @@
-# iot-bot
+# aws-iot-bot
 
 ## Overview
 

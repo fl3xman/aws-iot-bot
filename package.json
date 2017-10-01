@@ -1,10 +1,11 @@
 {
-  "name": "iot-bot",
+  "name": "aws-iot-bot",
   "version": "0.0.1",
   "homepage": "http://thirtyseventy.digital/",
-  "description": "Iot bot presentation.",
-  "main": "build/index.js",
+  "description": "AWS Iot bot presentation.",
+  "main": "dist/index.js",
   "keywords": [
+    "aws",
     "bot",
     "iot"
   ],
@@ -21,7 +22,7 @@
     "lint"
   ],
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node dist/index.js",
     "start:develop": "cross-env NODE_ENV=development FB_PAGE_ACCESS_TOKEN=token FB_VERIFY_TOKEN=token nodemon --exec ts-node -r tsconfig-paths/register bin/www.ts",
     "webpack:build": "node node_modules/webpack/bin/webpack.js --config webpack/wp.base.config.js",
     "lint": "tslint --project tsconfig.json --config tslint.json"
