@@ -23,7 +23,7 @@ const registerServices = (container: Container) => {
       keyPath: config.aws.credentials.private,
     });
   }).inSingletonScope();
-  container.bind<FacebookService>(FacebookAssembly.type).to(FacebookService).inSingletonScope();
+  container.bind<FacebookService>(FacebookAssembly.type).to(FacebookService);
 };
 
 export {

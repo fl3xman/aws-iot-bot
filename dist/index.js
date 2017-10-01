@@ -212,7 +212,7 @@ const registerServices = (container) => {
             keyPath: config.aws.credentials.private,
         });
     }).inSingletonScope();
-    container.bind(facebook_1.Assembly.type).to(facebook_1.default).inSingletonScope();
+    container.bind(facebook_1.Assembly.type).to(facebook_1.default);
 };
 exports.registerServices = registerServices;
 exports.default = Assembly;
@@ -672,7 +672,6 @@ exports.Assembly = Assembly;
 let FacebookService = class FacebookService {
     constructor(shadow) {
         this.shadow = shadow;
-        this.connectThing();
     }
     replyMessage(data) {
         if (data.object === "page") {
@@ -682,14 +681,14 @@ let FacebookService = class FacebookService {
                     const sender = payload.sender.id;
                     const text = _.toLower(payload.message.text);
                     switch (true) {
-                        case (this.checkText(text, ["on", "led on", "turn on"]) && !_.isNull(this.updateThing(true))):
+                        case this.checkText(text, ["on", "led on", "turn on"]):
                             {
-                                this.reply(sender, "Led was turned on.");
+                                this.executeThing(sender, "True", "Led was turned on.");
                             }
                             break;
-                        case (this.checkText(text, ["off", "led off", "turn off"]) && !_.isNull(this.updateThing(false))):
+                        case this.checkText(text, ["off", "led off", "turn off"]):
                             {
-                                this.reply(sender, "Led was turned off.");
+                                this.executeThing(sender, "False", "Led was turned off.");
                             }
                             break;
                         default:
@@ -728,28 +727,45 @@ let FacebookService = class FacebookService {
         const re = new RegExp(values.join("|"));
         return re.test(text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"));
     }
-    updateThing(on) {
-        return this.shadow.update(config.aws.thing, { state: { desired: { led: on ? "True" : "False" } } });
-    }
-    connectThing() {
+    executeThing(id, on, text) {
         const self = this;
-        this.shadow.on("connect", () => {
-            self.shadow.register(config.aws.thing, {}, () => {
-                // tslint:disable-next-line:no-console
-                console.log(`Thing connected/registered successfully`);
+        this.updateThing(on).then((success) => {
+            self.reply(id, success ? text : "Could not do it :(.");
+        });
+    }
+    updateThingState(on) {
+        return this.shadow.update(config.aws.thing, { state: { desired: { led: on } } });
+    }
+    updateThing(on) {
+        const self = this;
+        return new Promise((resolve, reject) => {
+            this.shadow.on("connect", () => {
+                self.shadow.register(config.aws.thing, {}, () => {
+                    // tslint:disable-next-line:no-console
+                    console.log(`Thing connected/registered successfully`);
+                    if (!_.isNull(this.updateThingState(on))) {
+                        // tslint:disable-next-line:no-console
+                        console.log(`Thing udpated successfully`);
+                    }
+                    else {
+                        // tslint:disable-next-line:no-console
+                        console.log(`Thing failed to update successfully`);
+                    }
+                });
             });
-        });
-        this.shadow.on("status", (thingName, stat, clientToken, stateObject) => {
-            // tslint:disable-next-line:no-console
-            console.log(`Thing received status ${stat} on ${thingName}: ${JSON.stringify(stateObject)}`);
-        });
-        this.shadow.on("delta", (thingName, stateObject) => {
-            // tslint:disable-next-line:no-console
-            console.log(`Thing received delta on ${thingName}: ${JSON.stringify(stateObject)}`);
-        });
-        this.shadow.on("timeout", (thingName, clientToken) => {
-            // tslint:disable-next-line:no-console
-            console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
+            this.shadow.on("status", (thingName, stat, clientToken, stateObject) => {
+                // tslint:disable-next-line:no-console
+                console.log(`Thing received status ${stat} on ${thingName}: ${JSON.stringify(stateObject)}`);
+                resolve(stat === "accepted" && (on === stateObject.state.led));
+            });
+            this.shadow.on("delta", (thingName, stateObject) => {
+                // tslint:disable-next-line:no-console
+                console.log(`Thing received delta on ${thingName}: ${JSON.stringify(stateObject)}`);
+            });
+            this.shadow.on("timeout", (thingName, clientToken) => {
+                // tslint:disable-next-line:no-console
+                console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
+            });
         });
     }
 };
