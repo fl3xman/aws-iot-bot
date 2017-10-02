@@ -2,7 +2,6 @@ import * as dotenv from "dotenv";
 
 import aws from "./components/aws";
 import facebook from "./components/facebook";
-import logger from "./components/logger";
 import server from "./components/server";
 
 if (!server.isProduction) {
@@ -12,6 +11,5 @@ if (!server.isProduction) {
 export {
   aws,
   facebook,
-  logger,
   server,
 };

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,14 +70,12 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv = __webpack_require__(13);
-const aws_1 = __webpack_require__(14);
+const dotenv = __webpack_require__(12);
+const aws_1 = __webpack_require__(13);
 exports.aws = aws_1.default;
-const facebook_1 = __webpack_require__(16);
+const facebook_1 = __webpack_require__(15);
 exports.facebook = facebook_1.default;
-const logger_1 = __webpack_require__(17);
-exports.logger = logger_1.default;
-const server_1 = __webpack_require__(18);
+const server_1 = __webpack_require__(16);
 exports.server = server_1.default;
 if (!server_1.default.isProduction) {
     dotenv.config();
@@ -88,45 +86,39 @@ if (!server_1.default.isProduction) {
 /* 1 */
 /***/ (function(module, exports) {
 
-module.exports = require("joi");
+module.exports = require("inversify");
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = require("inversify");
+module.exports = require("inversify-express-utils");
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = require("inversify-express-utils");
+module.exports = require("joi");
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = require("winston");
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
 module.exports = require("http-status-codes");
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const Generic = __webpack_require__(26);
+const Generic = __webpack_require__(24);
 exports.Generic = Generic;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -144,14 +136,14 @@ exports.default = BaseError;
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const HttpStatus = __webpack_require__(5);
-const base_error_1 = __webpack_require__(7);
+const HttpStatus = __webpack_require__(4);
+const base_error_1 = __webpack_require__(6);
 class HttpError extends base_error_1.default {
     constructor(status, message) {
         super(message || HttpStatus.getStatusText(status));
@@ -168,33 +160,33 @@ exports.default = HttpError;
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const facebook_service_1 = __webpack_require__(35);
+const facebook_service_1 = __webpack_require__(33);
 exports.Assembly = facebook_service_1.Assembly;
 exports.default = facebook_service_1.default;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("aws-iot-device-sdk");
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const AWS = __webpack_require__(10);
+const AWS = __webpack_require__(9);
 const config = __webpack_require__(0);
-const facebook_1 = __webpack_require__(9);
+const facebook_1 = __webpack_require__(8);
 const Assembly = {
     AWS: {
         thingShadow: {
@@ -219,41 +211,40 @@ exports.default = Assembly;
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const config = __webpack_require__(0);
-const Bluebird = __webpack_require__(19);
-const http_1 = __webpack_require__(20);
-const logger = __webpack_require__(4);
-const bootstrap_1 = __webpack_require__(21);
+const Bluebird = __webpack_require__(17);
+const http_1 = __webpack_require__(18);
+const bootstrap_1 = __webpack_require__(19);
 const server = http_1.createServer(bootstrap_1.default);
 const port = config.server.port;
 const serverListen = Bluebird.promisify(server.listen, { context: server });
 serverListen(port)
-    .then(() => logger.info(`App is listening on port ${port}`))
-    .catch((error) => logger.error(`Error (${error}) happened during server start`));
+    .then(() => console.log(`App is listening on port ${port}`))
+    .catch((error) => console.log(`Error (${error}) happened during server start`));
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = require("dotenv");
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 /// <reference types="node" />
 Object.defineProperty(exports, "__esModule", { value: true });
-const joi = __webpack_require__(1);
-const path = __webpack_require__(15);
+const joi = __webpack_require__(3);
+const path = __webpack_require__(14);
 const schema = joi.object({
     AWS_CLIENT_ID: joi.string()
         .default("576916018733"),
@@ -280,19 +271,19 @@ exports.default = {
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = require("path");
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const joi = __webpack_require__(1);
+const joi = __webpack_require__(3);
 const schema = joi.object({
     FB_DEBUG: joi.boolean()
         .truthy("TRUE")
@@ -322,45 +313,14 @@ exports.default = {
 
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const joi = __webpack_require__(1);
-const logger = __webpack_require__(4);
-const schema = joi.object({
-    LOGGER_ENABLED: joi.boolean()
-        .truthy("TRUE")
-        .truthy("true")
-        .falsy("FALSE")
-        .falsy("false")
-        .default(true),
-}).unknown()
-    .required();
-const { error, value: env } = joi.validate(process.env, schema);
-if (error) {
-    throw new Error(`Logger config validation error: ${error.message}`);
-}
-const config = {
-    enabled: env.LOGGER_ENABLED,
-};
-if (!config.enabled) {
-    logger.remove(logger.transports.Console);
-}
-exports.default = config;
-
-
-/***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 /// <reference types="node" />
 Object.defineProperty(exports, "__esModule", { value: true });
-const joi = __webpack_require__(1);
+const joi = __webpack_require__(3);
 const schema = joi.object({
     NODE_ENV: joi.string()
         .allow(["development", "production", "test"])
@@ -381,35 +341,35 @@ exports.default = {
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = require("bluebird");
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = require("http");
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(22);
-const inversify_1 = __webpack_require__(2);
-const inversify_express_utils_1 = __webpack_require__(3);
-const inversify_logger_middleware_1 = __webpack_require__(23);
-const bodyParser = __webpack_require__(24);
-const morgan = __webpack_require__(25);
+__webpack_require__(20);
+const inversify_1 = __webpack_require__(1);
+const inversify_express_utils_1 = __webpack_require__(2);
+const inversify_logger_middleware_1 = __webpack_require__(21);
+const bodyParser = __webpack_require__(22);
+const morgan = __webpack_require__(23);
 const config = __webpack_require__(0);
-const Errors = __webpack_require__(6);
-const assembly_1 = __webpack_require__(29);
-const assembly_2 = __webpack_require__(11);
-const assembly_3 = __webpack_require__(40);
+const Errors = __webpack_require__(5);
+const assembly_1 = __webpack_require__(27);
+const assembly_2 = __webpack_require__(10);
+const assembly_3 = __webpack_require__(38);
 const container = new inversify_1.Container();
 if (!config.server.isProduction) {
     const logger = inversify_logger_middleware_1.makeLoggerMiddleware();
@@ -434,45 +394,45 @@ exports.default = server.setConfig((app) => {
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = require("reflect-metadata");
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = require("inversify-logger-middleware");
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = require("morgan");
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const errors_1 = __webpack_require__(27);
-const HttpStatus = __webpack_require__(5);
-const logger = __webpack_require__(4);
+const errors_1 = __webpack_require__(25);
+const HttpStatus = __webpack_require__(4);
 const Assembly = {
     name: "ErrorGenericMiddleware",
 };
 exports.Assembly = Assembly;
 exports.default = (err, req, res, next) => {
-    logger.error(err.stack);
+    // tslint:disable-next-line:no-console
+    console.log(err.stack);
     const error = errors_1.ErrorFactory.createHttp(HttpStatus.INTERNAL_SERVER_ERROR);
     res
         .status(error.status)
@@ -481,28 +441,28 @@ exports.default = (err, req, res, next) => {
 
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const base_error_1 = __webpack_require__(7);
+const base_error_1 = __webpack_require__(6);
 exports.BaseError = base_error_1.default;
-const error_factory_1 = __webpack_require__(28);
+const error_factory_1 = __webpack_require__(26);
 exports.ErrorFactory = error_factory_1.default;
-const http_error_1 = __webpack_require__(8);
+const http_error_1 = __webpack_require__(7);
 exports.HttpError = http_error_1.default;
 
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const http_error_1 = __webpack_require__(8);
+const http_error_1 = __webpack_require__(7);
 class ErrorFactory {
     static createHttp(status, message) {
         return new http_error_1.default(status, message);
@@ -512,15 +472,15 @@ exports.default = ErrorFactory;
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const inversify_express_utils_1 = __webpack_require__(3);
-const FacebookController = __webpack_require__(30);
-const RootController = __webpack_require__(38);
+const inversify_express_utils_1 = __webpack_require__(2);
+const FacebookController = __webpack_require__(28);
+const RootController = __webpack_require__(36);
 const registerControllers = (container) => {
     const root = RootController.default(container);
     const facebook = FacebookController.default(container);
@@ -531,19 +491,19 @@ exports.registerControllers = registerControllers;
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const facebook_controller_1 = __webpack_require__(31);
+const facebook_controller_1 = __webpack_require__(29);
 exports.Assembly = facebook_controller_1.Assembly;
 exports.default = facebook_controller_1.default;
 
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -561,14 +521,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express = __webpack_require__(32);
-const qs = __webpack_require__(33);
-const url = __webpack_require__(34);
-const HttpStatus = __webpack_require__(5);
-const inversify_1 = __webpack_require__(2);
-const inversify_express_utils_1 = __webpack_require__(3);
+const express = __webpack_require__(30);
+const qs = __webpack_require__(31);
+const url = __webpack_require__(32);
+const HttpStatus = __webpack_require__(4);
+const inversify_1 = __webpack_require__(1);
+const inversify_express_utils_1 = __webpack_require__(2);
 const config = __webpack_require__(0);
-const facebook_1 = __webpack_require__(9);
+const facebook_1 = __webpack_require__(8);
 const Assembly = {
     name: "FacebookController", type: Symbol("FacebookController"),
 };
@@ -623,25 +583,25 @@ exports.default = (container) => {
 
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = require("express");
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = require("querystring");
 
 /***/ }),
-/* 34 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = require("url");
 
 /***/ }),
-/* 35 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -659,12 +619,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const AWS = __webpack_require__(10);
-const inversify_1 = __webpack_require__(2);
-const _ = __webpack_require__(36);
-const rp = __webpack_require__(37);
+const AWS = __webpack_require__(9);
+const inversify_1 = __webpack_require__(1);
+const _ = __webpack_require__(34);
+const rp = __webpack_require__(35);
 const config = __webpack_require__(0);
-const assembly_1 = __webpack_require__(11);
+const assembly_1 = __webpack_require__(10);
 const Assembly = {
     name: "FacebookService", type: Symbol("FacebookService"),
 };
@@ -672,7 +632,7 @@ exports.Assembly = Assembly;
 let FacebookService = class FacebookService {
     constructor(shadow) {
         this.shadow = shadow;
-        this.connectThing();
+        this.addThingListeners();
     }
     replyMessage(data) {
         if (data.object === "page") {
@@ -732,12 +692,16 @@ let FacebookService = class FacebookService {
         return this.shadow.update(config.aws.thing, { state: { desired: { led: on ? "True" : "False" } } });
     }
     connectThing() {
+        this.shadow.unregister(config.aws.thing);
+        this.shadow.register(config.aws.thing, {}, () => {
+            // tslint:disable-next-line:no-console
+            console.log(`Thing connected/registered successfully`);
+        });
+    }
+    addThingListeners() {
         const self = this;
         this.shadow.on("connect", () => {
-            self.shadow.register(config.aws.thing, {}, () => {
-                // tslint:disable-next-line:no-console
-                console.log(`Thing connected/registered successfully`);
-            });
+            self.connectThing();
         });
         this.shadow.on("status", (thingName, stat, clientToken, stateObject) => {
             // tslint:disable-next-line:no-console
@@ -750,6 +714,16 @@ let FacebookService = class FacebookService {
         this.shadow.on("timeout", (thingName, clientToken) => {
             // tslint:disable-next-line:no-console
             console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
+            self.connectThing();
+        });
+        this.shadow.on("close", () => {
+            // tslint:disable-next-line:no-console
+            console.log("Thing closed");
+            self.shadow.unregister(config.aws.thing);
+        });
+        this.shadow.on("reconnect", () => {
+            // tslint:disable-next-line:no-console
+            console.log("Thing reconnect");
         });
     }
 };
@@ -762,31 +736,31 @@ exports.default = FacebookService;
 
 
 /***/ }),
-/* 36 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = require("lodash");
 
 /***/ }),
-/* 37 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = require("request-promise");
 
 /***/ }),
-/* 38 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const root_controller_1 = __webpack_require__(39);
+const root_controller_1 = __webpack_require__(37);
 exports.Assembly = root_controller_1.Assembly;
 exports.default = root_controller_1.default;
 
 
 /***/ }),
-/* 39 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -801,8 +775,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const inversify_1 = __webpack_require__(2);
-const inversify_express_utils_1 = __webpack_require__(3);
+const inversify_1 = __webpack_require__(1);
+const inversify_express_utils_1 = __webpack_require__(2);
 const Assembly = {
     name: "RootController", type: Symbol("RootController"),
 };
@@ -831,13 +805,13 @@ exports.default = (container) => {
 
 
 /***/ }),
-/* 40 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const Errors = __webpack_require__(6);
+const Errors = __webpack_require__(5);
 const Assembly = {};
 exports.Assembly = Assembly;
 const registerMiddlewares = (container) => {

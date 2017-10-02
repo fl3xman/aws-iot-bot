@@ -1,6 +1,5 @@
 import { ErrorFactory } from "@utils/errors";
 import * as HttpStatus from "http-status-codes";
-import * as logger from "winston";
 
 const Assembly = {
   name: "ErrorGenericMiddleware",
@@ -12,7 +11,8 @@ export {
 
 export default (err: any, req: any, res: any, next: any) => {
 
-  logger.error(err.stack);
+  // tslint:disable-next-line:no-console
+  console.log(err.stack);
   const error = ErrorFactory.createHttp(HttpStatus.INTERNAL_SERVER_ERROR);
   res
     .status(error.status)
