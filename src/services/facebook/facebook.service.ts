@@ -92,11 +92,14 @@ export default class FacebookService {
   }
 
   private connectThing() {
-    this.shadow.unregister(config.aws.thing);
     this.shadow.register(config.aws.thing, {}, () => {
       // tslint:disable-next-line:no-console
       console.log(`Thing connected/registered successfully`);
     });
+  }
+
+  private disconnectThing() {
+    this.shadow.unregister(config.aws.thing);
   }
 
   private addThingListeners() {
@@ -119,13 +122,13 @@ export default class FacebookService {
     this.shadow.on("timeout", (thingName, clientToken) => {
       // tslint:disable-next-line:no-console
       console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
+      self.disconnectThing();
       self.connectThing();
     });
 
     this.shadow.on("close", () => {
       // tslint:disable-next-line:no-console
       console.log("Thing closed");
-      self.shadow.unregister(config.aws.thing);
     });
 
     this.shadow.on("reconnect", () => {

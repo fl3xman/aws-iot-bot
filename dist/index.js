@@ -692,11 +692,13 @@ let FacebookService = class FacebookService {
         return this.shadow.update(config.aws.thing, { state: { desired: { led: on ? "True" : "False" } } });
     }
     connectThing() {
-        this.shadow.unregister(config.aws.thing);
         this.shadow.register(config.aws.thing, {}, () => {
             // tslint:disable-next-line:no-console
             console.log(`Thing connected/registered successfully`);
         });
+    }
+    disconnectThing() {
+        this.shadow.unregister(config.aws.thing);
     }
     addThingListeners() {
         const self = this;
@@ -714,12 +716,12 @@ let FacebookService = class FacebookService {
         this.shadow.on("timeout", (thingName, clientToken) => {
             // tslint:disable-next-line:no-console
             console.log(`Thing received timeout on ${thingName} with token ${clientToken}`);
+            self.disconnectThing();
             self.connectThing();
         });
         this.shadow.on("close", () => {
             // tslint:disable-next-line:no-console
             console.log("Thing closed");
-            self.shadow.unregister(config.aws.thing);
         });
         this.shadow.on("reconnect", () => {
             // tslint:disable-next-line:no-console
